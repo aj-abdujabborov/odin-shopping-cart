@@ -1,6 +1,11 @@
+/* eslint-disable react/jsx-no-bind */
 import styled from 'styled-components';
-import Header from './components/Header';
 import { createGlobalStyle } from 'styled-components';
+
+import { useState } from 'react';
+
+import Header from './components/Header';
+import Menu from './components/Menu';
 import ItemCard from './components/ItemCard';
 import ShopPage from './ShopPage';
 
@@ -23,6 +28,12 @@ const StyledButton = styled.button`
   &:hover {
     color: white;
   }
+`;
+
+const AppDiv = styled.div`
+  filter: ${(props) => (props.$blur ? `blur(5px) grayscale(80%)` : '')};
+  pointer-events: ${(props) => (props.$blur ? `none` : 'auto')};
+  transition: 300ms ease-in-out filter;
 `;
 
 const items = [
@@ -60,13 +71,22 @@ const items = [
 ];
 
 function App() {
+  const [showMenu, setShowMenu] = useState(0);
+
+  function toggleMenu() {
+    setShowMenu(!showMenu);
+  }
+
   return (
     <>
       <GlobalFonts />
-      <Header />
-      <main style={{ padding: '20px' }}>
-        <ShopPage itemArray={items} />
-      </main>
+      <Menu show={showMenu} menuButton={toggleMenu} />
+      <AppDiv $blur={showMenu}>
+        <Header menuButton={toggleMenu} />
+        <main style={{ padding: '20px' }}>
+          <ShopPage itemArray={items} />
+        </main>
+      </AppDiv>
     </>
   );
 }

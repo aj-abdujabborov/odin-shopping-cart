@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import SquareButton from '../miniComponents/SquareButton';
+import SiteTitle from '../miniComponents/SiteTitle';
 
 const HeaderElem = styled.header`
   border-bottom: 1px solid black;
@@ -11,51 +13,17 @@ const HeaderDiv = styled.div`
   margin: 1rem 0;
 `;
 
-const SiteTitle = styled.h1`
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-`;
-
-const Button = styled.button`
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-
-  padding: 0;
-  margin: 0;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const ButtonRight = styled(Button)`
+const ButtonRight = styled(SquareButton)`
   margin-left: auto;
 `;
 
-const Span = styled.span`
-  padding: 0;
-  font-size: 2.5rem;
-  &:hover {
-    color: #cf8804;
-  }
-`;
-
-function Header() {
+function Header({ menuButton }) {
   return (
     <HeaderElem>
       <HeaderDiv>
-        <Button type="button">
-          <Span className="material-symbols-outlined">menu</Span>
-        </Button>
-        <SiteTitle>ConcocShop</SiteTitle>
-        <ButtonRight type="button">
-          <Span className="material-symbols-outlined">shopping_cart</Span>
-        </ButtonRight>
+        <SquareButton onClick={menuButton} symbolText="menu" />
+        <SiteTitle />
+        <ButtonRight type="button" symbolText="shopping_cart" />
       </HeaderDiv>
     </HeaderElem>
   );
