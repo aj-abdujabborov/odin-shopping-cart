@@ -1,4 +1,5 @@
 import styled, { keyframes, css } from 'styled-components';
+import { Link } from 'react-router-dom';
 import SquareButton from '../miniComponents/SquareButton';
 
 const slideIn = keyframes`
@@ -61,7 +62,7 @@ const LinksBox = styled.ul`
   margin: 0;
 `;
 
-const Link = styled.a`
+const StyledLink = styled(Link)`
   display: block;
 
   margin: 1rem 0;
@@ -69,7 +70,17 @@ const Link = styled.a`
 
   background: #afbdde;
   color: black;
+
+  text-decoration: none;
 `;
+
+const linkMap = [
+  { text: "Men's clothing", to: '/shop/mens-clothing' },
+  { text: "Women's clothing", to: '/shop/womens-clothing' },
+  { text: 'Jewelery', to: '/shop/jewelery' },
+  { text: 'Electronics', to: '/shop/electronics' },
+  { text: 'Shop all', to: '/shop' },
+];
 
 function Menu({ show, menuButton }) {
   return (
@@ -78,10 +89,13 @@ function Menu({ show, menuButton }) {
         <SquareButton onClick={menuButton} symbolText="menu" />
         <Nav>
           <LinksBox>
-            <Link to="">Men&apos;s clothing</Link>
-            <Link>Women&apos;s clothing</Link>
-            <Link>Jewels</Link>
-            <Link>Electronics</Link>
+            {linkMap.map((link, ind) => (
+              <StyledLink key={ind} to={link.to} onClick={menuButton}>
+                {link.text}
+              </StyledLink>
+              // fine to use ind since order won't change at runtime
+            ))}
+            ;
           </LinksBox>
         </Nav>
       </MenuSubBox>

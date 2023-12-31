@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import ItemCard from './components/ItemCard';
+import useProductsList from './hooks/useProductsList';
 
 const Container = styled.div`
   display: flex;
@@ -15,11 +17,25 @@ const List = styled.ul`
   gap: 20px;
 `;
 
-function ShopPage({ itemArray }) {
+const categoryMap = new Map();
+categoryMap.set('mens-clothing', "men's clothing");
+categoryMap.set('womens-clothing', "women's clothing");
+categoryMap.set('jewelery', 'jewelery');
+categoryMap.set('electronics', 'electronics');
+
+function ShopPage() {
+  const { category } = useParams();
+  const { loading, error, products } = useProductsList({
+    category: category ? categoryMap.get(category) : undefined,
+  });
+
+  if (loading) return '...';
+  if (error) return 'Error'; // navigate to error page
+
   return (
     <Container>
       <List>
-        {itemArray.map((item) => (
+        {products.map((item) => (
           <li key={item.id}>
             <ItemCard
               title={item.title}
