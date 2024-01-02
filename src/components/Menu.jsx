@@ -95,7 +95,6 @@ function Menu({ show, menuButton }) {
               </StyledLink>
               // fine to use ind since order won't change at runtime
             ))}
-            ;
           </LinksBox>
         </Nav>
       </MenuSubBox>
