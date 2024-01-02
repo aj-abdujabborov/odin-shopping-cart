@@ -41,7 +41,7 @@ function App() {
         <Header menuButton={toggleMenu} />
         <main style={{ padding: '20px' }}>
           <Outlet />
-        </main>
+      </main>
       </AppDiv>
     </>
   );

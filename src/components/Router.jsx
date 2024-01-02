@@ -3,6 +3,7 @@ import App from '../App';
 import ShopPage from '../ShopPage';
 import HomePage from '../HomePage';
 import ErrorPage from '../ErrorPage';
+import CartPage from '../CartPage';
 
 function Router() {
   const router = createBrowserRouter([
@@ -16,12 +17,16 @@ function Router() {
           element: <HomePage />,
         },
         {
-          path: '/Shop/:category',
+          path: '/shop/:category',
           element: <ShopPage />,
         },
         {
-          path: '/Shop',
+          path: '/shop',
           element: <ShopPage />,
+        },
+        {
+          path: '/cart',
+          element: <CartPage />,
         },
       ],
     },
