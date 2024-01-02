@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Button = styled.button`
   background: none;
@@ -7,6 +8,7 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   width: 3rem;
+  text-decoration: none;
 
   padding: 0;
   margin: 0;
@@ -24,12 +26,7 @@ const Span = styled.span`
   }
 `;
 
-export default function SquareButton({
-  className,
-  children,
-  symbolText = '',
-  onClick,
-}) {
+function ButtonIcon({ className, children, symbolText = '', onClick }) {
   return (
     <Button type="button" className={className} onClick={onClick}>
       <Span className="material-symbols-outlined">{symbolText}</Span>
@@ -37,3 +34,14 @@ export default function SquareButton({
     </Button>
   );
 }
+
+function LinkIcon({ className, children, symbolText = '', to = '' }) {
+  return (
+    <Button as={Link} className={className} to={to}>
+      <Span className="material-symbols-outlined">{symbolText}</Span>
+      {children}
+    </Button>
+  );
+}
+
+export { ButtonIcon, LinkIcon };

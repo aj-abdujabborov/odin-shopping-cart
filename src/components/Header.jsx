@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import SquareButton from '../miniComponents/SquareButton';
+import { ButtonIcon, LinkIcon } from '../miniComponents/ClickableSquare';
 import SiteTitle from '../miniComponents/SiteTitle';
-import { Link } from 'react-router-dom';
 
 const HeaderElem = styled.header`
   border-bottom: 1px solid black;
@@ -14,7 +13,7 @@ const HeaderDiv = styled.div`
   margin: 1rem 0;
 `;
 
-const ButtonRight = styled(SquareButton)`
+const LinkRight = styled(LinkIcon)`
   margin-left: auto;
 `;
 
@@ -22,10 +21,9 @@ function Header({ menuButton }) {
   return (
     <HeaderElem>
       <HeaderDiv>
-        <SquareButton onClick={menuButton} symbolText="menu" />
+        <ButtonIcon onClick={menuButton} symbolText="menu" />
         <SiteTitle />
-        <ButtonRight type="button" symbolText="shopping_cart" />
-        <Link to="/cart">Cart</Link>
+        <LinkRight symbolText="shopping_cart" to="/cart" />
       </HeaderDiv>
     </HeaderElem>
   );

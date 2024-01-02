@@ -1,6 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import SquareButton from '../miniComponents/SquareButton';
+import { ButtonIcon } from '../miniComponents/ClickableSquare';
 
 const slideIn = keyframes`
   0% {
@@ -86,7 +86,7 @@ function Menu({ show, menuButton }) {
   return (
     <MenuBox $show={show}>
       <MenuSubBox>
-        <SquareButton onClick={menuButton} symbolText="menu" />
+        <ButtonIcon onClick={menuButton} symbolText="menu" />
         <Nav>
           <LinksBox>
             {linkMap.map((link, ind) => (
