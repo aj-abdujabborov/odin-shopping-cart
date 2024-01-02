@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import ItemCard from './components/ItemCard';
-import useProductsList from './hooks/useProductsList';
+import ItemCard from '../components/ItemCard';
+import useProductsList from '../hooks/useProductsList';
 
 const Container = styled.div`
   display: flex;

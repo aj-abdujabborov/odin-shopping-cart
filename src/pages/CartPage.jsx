@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useCartProducts, useNumCartProducts } from './useCartData';
+import { useCartProducts, useNumCartProducts } from '../hooks/useCartData';
 
 export default function CartPage() {
   const { numCartProducts } = useNumCartProducts();

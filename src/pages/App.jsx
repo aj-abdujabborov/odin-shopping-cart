@@ -5,8 +5,8 @@ import { createGlobalStyle } from 'styled-components';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import Header from './components/Header';
-import Menu from './components/Menu';
+import Header from '../components/Header';
+import Menu from '../components/Menu';
 
 const GlobalFonts = createGlobalStyle`
   :root {
@@ -41,7 +41,7 @@ function App() {
         <Header menuButton={toggleMenu} />
         <main style={{ padding: '20px' }}>
           <Outlet />
-      </main>
+        </main>
       </AppDiv>
     </>
   );
