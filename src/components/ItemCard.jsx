@@ -77,7 +77,7 @@ const Button = styled.button`
   color: white;
 `;
 
-function ItemCard({ title, price, imageSrc, rating, numRatings }) {
+function ItemCard({ title, price, imageSrc, rating, numRatings, addToCart }) {
   return (
     <Item>
       <Photo.Box>
@@ -96,7 +96,9 @@ function ItemCard({ title, price, imageSrc, rating, numRatings }) {
           </Rating.Text>
         </Rating.Box>
         <Price>${price}</Price>
-        <Button type="button">Add to cart</Button>
+        <Button type="button" onClick={addToCart}>
+          Add to cart
+        </Button>
       </Info>
     </Item>
   );
