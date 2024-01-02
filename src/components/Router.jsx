@@ -2,13 +2,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from '../App';
 import ShopPage from '../ShopPage';
 import HomePage from '../HomePage';
+import ErrorPage from '../ErrorPage';
 
 function Router() {
   const router = createBrowserRouter([
     {
       path: '/',
       element: <App />,
-      // errorElement: <ErrorPage />,
+      errorElement: <ErrorPage />,
       children: [
         {
           path: '',
