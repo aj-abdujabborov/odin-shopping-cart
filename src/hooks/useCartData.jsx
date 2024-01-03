@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
 
 const cartData = (function CartData() {
-  const items = [];
-  const contentSubscribers = [];
+  const itemCounts = [];
+  const itemIds = [];
+  const idsSubscribers = [];
+  const countsSubscribers = [];
   const lengthSubscribers = [];
 
-  function subscribe(callback, data) {
+  function subscribe(to, callback) {
     let array;
-    if (data === 'number') array = lengthSubscribers;
-    else if (data === 'content') array = contentSubscribers;
+    if (to === 'totalCount') array = lengthSubscribers;
+    else if (to === 'counts') array = countsSubscribers;
+    else if (to === 'ids') array = idsSubscribers;
+    else return undefined;
     array.push(callback);
 
     function removeSubscriber() {
@@ -20,52 +24,76 @@ const cartData = (function CartData() {
   }
 
   function getNumItems() {
-    return items.reduce((sum, curr) => sum + curr.count, 0);
+    return itemCounts.reduce((sum, curr) => sum + curr, 0);
   }
 
-  function getItems() {
-    return [...items];
+  function getItemCounts() {
+    return itemCounts;
   }
 
-  function push() {
-    contentSubscribers.forEach((setter) => setter([...items]));
+  function getItemIds() {
+    return itemIds;
+  }
+
+  function pushCountChange() {
+    countsSubscribers.forEach((setter) => setter([...itemCounts]));
     lengthSubscribers.forEach((setter) => setter(getNumItems()));
   }
 
-  function addItem(itemId) {
-    const thisItem = items.find((item) => item.id === itemId);
-    if (thisItem) thisItem.count += 1;
-    else items.push({ id: itemId, count: 1 });
-
-    console.log(items);
-
-    push();
+  function pushAllChanges() {
+    pushCountChange();
+    idsSubscribers.forEach((setter) => setter([...itemIds]));
   }
 
-  function removeItem(itemId) {
-    const ind = items.findIndex((item) => item.id === itemId);
-    if (ind === -1) return;
-
-    items[ind].count -= 1;
-    if (items[ind].count <= 0) {
-      items.splice(ind, 1);
+  function addItem(thisId) {
+    const thisInd = itemIds.findIndex((id) => id === thisId);
+    if (thisInd !== -1) {
+      itemCounts[thisInd] += 1;
+      pushCountChange();
+    } else {
+      itemIds.push(thisId);
+      itemCounts.push(1);
+      pushAllChanges();
     }
-
-    push();
   }
 
-  function setItemCount(itemId, count) {
-    const thisItem = items.find((item) => item.id === itemId);
-    if (thisItem) thisItem.count = count;
-    else items.push({ id: itemId, count });
+  function removeItem(thisId) {
+    const thisInd = itemIds.findIndex((id) => id === thisId);
+    if (thisInd === -1) return;
 
-    push();
+    itemCounts[thisInd] -= 1;
+    if (itemCounts[thisInd] <= 0) {
+      itemCounts.splice(thisInd, 1);
+      itemIds.splice(thisInd, 1);
+      pushAllChanges();
+    } else {
+      pushCountChange();
+    }
+  }
+
+  function setItemCount(thisId, count) {
+    const thisInd = itemIds.findIndex((id) => id === thisId);
+    if (thisInd !== -1) {
+      itemCounts[thisInd] = count;
+      if (itemCounts[thisInd] <= 0) {
+        itemCounts.splice(thisInd, 1);
+        itemIds.splice(thisInd, 1);
+        pushAllChanges();
+      } else {
+        pushCountChange();
+      }
+    } else {
+      itemIds.push(thisId);
+      itemCounts.push(count);
+      pushAllChanges();
+    }
   }
 
   return {
     subscribe,
     getNumItems,
-    getItems,
+    getItemCounts,
+    getItemIds,
     addItem,
     removeItem,
     setItemCount,
@@ -76,7 +104,7 @@ function useNumCartProducts() {
   const [numCartItems, setNumCartItems] = useState(cartData.getNumItems());
 
   useEffect(() => {
-    const cleaner = cartData.subscribe(setNumCartItems, 'number');
+    const cleaner = cartData.subscribe('totalCount', setNumCartItems);
     return cleaner;
   }, []);
 
@@ -84,15 +112,23 @@ function useNumCartProducts() {
 }
 
 function useCartProducts() {
-  const [cartItems, setCartItems] = useState(cartData.getItems());
+  const [cartItemIds, setCartItemIds] = useState(cartData.getItemIds());
+  const [cartItemCounts, setCartItemCounts] = useState(
+    cartData.getItemCounts(),
+  );
 
   useEffect(() => {
-    const cleaner = cartData.subscribe(setCartItems, 'content');
-    return cleaner;
+    const idsCleaner = cartData.subscribe('ids', setCartItemIds);
+    const countsCleaner = cartData.subscribe('counts', setCartItemCounts);
+    return () => {
+      idsCleaner();
+      countsCleaner();
+    };
   }, []);
 
   return {
-    cartItems,
+    cartItemIds,
+    cartItemCounts,
     addItem: cartData.addItem,
     removeItem: cartData.removeItem,
     setItemCount: cartData.setItemCount,
