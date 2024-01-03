@@ -44,7 +44,7 @@ function Header({ menuButton }) {
         <ButtonIcon onClick={menuButton} symbolText="menu" />
         <SiteTitle />
         <LinkRight symbolText="shopping_cart" to="/cart">
-          <NumProducts>{numCartProducts}</NumProducts>
+          {numCartProducts > 0 && <NumProducts>{numCartProducts}</NumProducts>}
         </LinkRight>
       </HeaderDiv>
     </HeaderElem>
