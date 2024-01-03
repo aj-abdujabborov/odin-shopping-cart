@@ -31,7 +31,9 @@ function useProductsByCategory({ category = 'all', sortBy, sortDir }) {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
-        const data = sortProducts(await response.json(), sortBy, sortDir);
+        let data = await response.json();
+        if (!data.length) throw new Error('No products found.');
+        data = sortProducts(data, sortBy, sortDir);
         setProducts(data);
       } catch (err) {
         setError(err.message);
