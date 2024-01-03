@@ -44,7 +44,7 @@ function useProductsByCategory({ category = 'all', sortBy, sortDir }) {
   return { loading, error, products };
 }
 
-function useProductsByIds({ ids, sortBy, sortDir }) {
+function useProductsByIds(ids) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [products, setProducts] = useState(null);
@@ -66,17 +66,15 @@ function useProductsByIds({ ids, sortBy, sortDir }) {
     (async function getData() {
       try {
         const responseArray = ids.map((id) => fetchById(id));
-
         const data = await Promise.all(responseArray);
-        const sortedData = sortProducts(data, sortBy, sortDir);
-        setProducts(sortedData);
+        setProducts(data);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     })();
-  }, [ids, sortBy, sortDir]);
+  }, [ids]);
 
   return { loading, error, products };
 }
