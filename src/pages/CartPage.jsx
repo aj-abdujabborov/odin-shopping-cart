@@ -1,31 +1,85 @@
-import { useState } from 'react';
+import styled from 'styled-components';
 import { useCartProducts, useNumCartProducts } from '../hooks/useCartData';
+import { useProductsByIds } from '../hooks/useProductsAPI';
+import CartItemCard from '../components/CartItemCard';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const CheckoutBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const ListBox = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: grid;
+  gap: 1rem;
+`;
+
+const ListItem = styled.li`
+  display: block;
+`;
+
+const Button = styled.button`
+  display: block;
+  width: 100%;
+  border: none;
+  background: #2b3344;
+
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-size: 1.25rem;
+  color: white;
+`;
 
 export default function CartPage() {
   const { numCartProducts } = useNumCartProducts();
-  const { cartItems, addItem, removeItem, setItemCount } = useCartProducts();
-  const [field, setField] = useState('');
+  const { cartItemIds, cartItemCounts, addItem, removeItem, setItemCount } =
+    useCartProducts();
+  const { loading, error, products } = useProductsByIds(cartItemIds);
+
+  if (loading) return '...';
+  if (error) return `Error: ${error}`;
+
+  const totalPrice =
+    Math.round(
+      products.reduce(
+        (sum, currProd, ind) => sum + currProd.price * cartItemCounts[ind],
+        0,
+      ) * 100,
+    ) / 100;
 
   return (
-    <div>
-      <h3>Num in cart: {numCartProducts}</h3>
-      <ul>
-        {cartItems.map(({ id, count }) => (
-          <li key={id}>
-            ID: {id}, Count: {count}
-          </li>
+    <Container>
+      <CheckoutBox>
+        <span>Subtotal: ${totalPrice}</span>
+        <Button>
+          Checkout {numCartProducts} item{numCartProducts > 1 && 's'}
+        </Button>
+      </CheckoutBox>
+      <ListBox>
+        {products.map((prod, ind) => (
+          <ListItem key={prod.id}>
+            <CartItemCard
+              title={prod.title}
+              price={prod.price}
+              imageSrc={prod.image}
+              count={cartItemCounts[ind]}
+              increaseCount={() => addItem(prod.id)}
+              decreaseCount={() => removeItem(prod.id)}
+              setCount={(count) => setItemCount(prod.id, count)}
+            />
+          </ListItem>
         ))}
-      </ul>
-      <input value={field} onChange={(e) => setField(e.target.value)} />
-      <button type="button" onClick={() => addItem(field)}>
-        Add
-      </button>
-      <button type="button" onClick={() => removeItem(field)}>
-        Remove
-      </button>
-      <button type="button" onClick={() => setItemCount(field, 10)}>
-        Set count
-      </button>
-    </div>
+      </ListBox>
+    </Container>
   );
 }
