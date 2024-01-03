@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import ItemCard from '../components/ItemCard';
-import useProductsList from '../hooks/useProductsList';
+import { useProductsByCategory } from '../hooks/useProductsAPI';
 import { useCartProducts } from '../hooks/useCartData';
 
 const Container = styled.div`
@@ -26,7 +26,7 @@ categoryMap.set('electronics', 'electronics');
 
 function ShopPage() {
   const { category } = useParams();
-  const { loading, error, products } = useProductsList({
+  const { loading, error, products } = useProductsByCategory({
     category: category ? categoryMap.get(category) : undefined,
   });
   const { addItem } = useCartProducts();

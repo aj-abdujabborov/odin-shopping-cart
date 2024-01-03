@@ -2,6 +2,8 @@ import { describe, test, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import useProductsList from '../useProductsList';
 
+// TEST IS OUT OF DATE. NEED TO TEST TWO FUNCTIONS.
+
 // More tests to implement
 // * When a request gives error, but next gives status = ok,
 //   loading is shown again, error is falsy, and data is valid
