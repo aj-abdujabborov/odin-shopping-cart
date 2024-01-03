@@ -7,7 +7,8 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
+  width: ${(props) => `${props.$size}rem`};
+  height: ${(props) => `${props.$size}rem`};
   text-decoration: none;
 
   padding: 0;
@@ -20,25 +21,54 @@ const Button = styled.button`
 
 const Span = styled.span`
   padding: 0;
-  font-size: 2.5rem;
+  font-size: ${(props) => `${props.$size}rem`};
   &:hover {
     color: #cf8804;
   }
 `;
 
-function ButtonIcon({ className, children, symbolText = '', onClick }) {
+function ButtonIcon({
+  buttonSize = 3,
+  iconSize,
+  className,
+  children,
+  symbolText = '',
+  onClick,
+}) {
   return (
-    <Button type="button" className={className} onClick={onClick}>
-      <Span className="material-symbols-outlined">{symbolText}</Span>
+    <Button
+      $size={buttonSize}
+      type="button"
+      className={className}
+      onClick={onClick}
+    >
+      <Span
+        $size={iconSize || buttonSize * 0.83}
+        className="material-symbols-outlined"
+      >
+        {symbolText}
+      </Span>
       {children}
     </Button>
   );
 }
 
-function LinkIcon({ className, children, symbolText = '', to = '' }) {
+function LinkIcon({
+  buttonSize = 3,
+  iconSize,
+  className,
+  children,
+  symbolText = '',
+  to = '',
+}) {
   return (
-    <Button as={Link} className={className} to={to}>
-      <Span className="material-symbols-outlined">{symbolText}</Span>
+    <Button as={Link} $size={buttonSize} className={className} to={to}>
+      <Span
+        $size={iconSize || buttonSize * 0.83}
+        className="material-symbols-outlined"
+      >
+        {symbolText}
+      </Span>
       {children}
     </Button>
   );
