@@ -7,6 +7,28 @@ const cartData = (function CartData() {
   const countsSubscribers = [];
   const lengthSubscribers = [];
 
+  function loadCountsFromStorage() {
+    if (localStorage.getItem('counts')) {
+      JSON.parse(localStorage.getItem('counts')).forEach((count) =>
+        itemCounts.push(count),
+      );
+    }
+  }
+
+  function loadIdsFromStorage() {
+    if (localStorage.getItem('ids')) {
+      JSON.parse(localStorage.getItem('ids')).forEach((id) => itemIds.push(id));
+    }
+  }
+
+  function saveCountsToStorage() {
+    localStorage.setItem('counts', JSON.stringify(itemCounts));
+  }
+
+  function saveIdsToStorage() {
+    localStorage.setItem('ids', JSON.stringify(itemIds));
+  }
+
   function subscribe(to, callback) {
     let array;
     if (to === 'totalCount') array = lengthSubscribers;
@@ -38,11 +60,14 @@ const cartData = (function CartData() {
   function pushCountChange() {
     countsSubscribers.forEach((setter) => setter([...itemCounts]));
     lengthSubscribers.forEach((setter) => setter(getNumItems()));
+
+    saveCountsToStorage();
   }
 
   function pushAllChanges() {
     pushCountChange();
     idsSubscribers.forEach((setter) => setter([...itemIds]));
+    saveIdsToStorage();
   }
 
   function addItem(thisId) {
@@ -88,6 +113,9 @@ const cartData = (function CartData() {
       pushAllChanges();
     }
   }
+
+  loadCountsFromStorage();
+  loadIdsFromStorage();
 
   return {
     subscribe,
