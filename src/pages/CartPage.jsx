@@ -60,14 +60,14 @@ export default function CartPage() {
   return (
     <Container>
       <CheckoutBox>
-        <span>Subtotal: ${totalPrice}</span>
+        <span>{`Subtotal: $${totalPrice}`}</span>
         <Button>
-          Checkout {numCartProducts} item{numCartProducts > 1 && 's'}
+          {`Checkout ${numCartProducts} item${numCartProducts > 1 && 's'}`}
         </Button>
       </CheckoutBox>
-      <ListBox>
+      <ListBox aria-label="Items in cart">
         {products.map((prod, ind) => (
-          <ListItem key={prod.id}>
+          <ListItem aria-label={prod.title} key={prod.id}>
             <CartItemCard
               title={prod.title}
               price={prod.price}

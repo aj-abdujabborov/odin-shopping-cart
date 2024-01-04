@@ -34,6 +34,7 @@ function ButtonIcon({
   children,
   symbolText = '',
   onClick,
+  ariaLabel,
 }) {
   return (
     <Button
@@ -41,10 +42,12 @@ function ButtonIcon({
       type="button"
       className={className}
       onClick={onClick}
+      aria-label={ariaLabel}
     >
       <Span
         $size={iconSize || buttonSize * 0.83}
         className="material-symbols-outlined"
+        aria-label=""
       >
         {symbolText}
       </Span>

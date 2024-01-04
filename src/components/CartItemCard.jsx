@@ -101,9 +101,10 @@ function CartItemCard({
       </Photo.Box>
       <Info>
         <Title>{title}</Title>
-        <Price>${price}</Price>
+        <Price>{`$${price}`}</Price>
         <CountBox>
           <Button
+            ariaLabel={count === 1 ? 'Delete item' : 'Decrease quantity by 1'}
             buttonSize={1.5}
             iconSize={1.5}
             symbolText={count === 1 ? 'delete_forever' : 'remove'}
@@ -111,11 +112,16 @@ function CartItemCard({
           />
           <NumberInput
             type="number"
+            id="quantity"
+            name="quantity"
+            min="1"
+            max="12"
             value={`${countField}`} // to remove trailing 0s in string
             onChange={(e) => setCountField(+e.target.value)}
             onBlur={() => setCount(Math.max(countField, 1))}
           />
           <Button
+            ariaLabel="Increase quantity by 1"
             buttonSize={1.5}
             iconSize={1.5}
             symbolText="add"
