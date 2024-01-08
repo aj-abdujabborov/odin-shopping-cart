@@ -59,10 +59,16 @@ export default function CartPage() {
   return (
     <Container>
       <CheckoutBox>
-        <span>{`Subtotal: $${totalPrice}`}</span>
-        <Button>
-          {`Checkout ${numProducts} item${numProducts > 1 && 's'}`}
-        </Button>
+        {numProducts > 0 ? (
+          <span>{`Subtotal: $${totalPrice}`}</span>
+        ) : (
+          'Cart is empty'
+        )}
+        {numProducts > 0 && (
+          <Button>
+            {`Checkout ${numProducts} item${numProducts > 1 ? 's' : ''}`}
+          </Button>
+        )}
       </CheckoutBox>
       <ListBox aria-label="Items in cart">
         {products.map((prod, ind) => (
