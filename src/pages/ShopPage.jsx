@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import ItemCard from '../components/ItemCard';
 import { useProductsByCategory } from '../hooks/useProductsAPI';
-import { useCartProducts } from '../hooks/useCartData';
+import { useCartDispatch } from '../hooks/useCart';
 
 const Container = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ function ShopPage() {
   const { loading, error, products } = useProductsByCategory({
     category: category ? categoryMap.get(category) : undefined,
   });
-  const { addItem } = useCartProducts();
+  const { add } = useCartDispatch();
 
   if (loading) return '...';
   if (error) return 'Error'; // navigate to error page
@@ -45,7 +45,7 @@ function ShopPage() {
               rating={item.rating.rate}
               numRatings={item.rating.count}
               price={item.price}
-              addToCart={() => addItem(item.id)}
+              addToCart={() => add(item.id)}
             />
           </li>
         ))}

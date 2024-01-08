@@ -4,6 +4,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import CartProvider from '../CartContext';
 import Header from '../components/Header';
 import Menu from '../components/Menu';
 
@@ -37,7 +38,7 @@ function App() {
   }
 
   return (
-    <>
+    <CartProvider>
       <GlobalFonts />
       <Menu show={showMenu} menuButton={toggleMenu} />
       <AppDiv $blur={showMenu}>
@@ -46,7 +47,7 @@ function App() {
           <Outlet />
         </main>
       </AppDiv>
-    </>
+    </CartProvider>
   );
 }
 

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ButtonIcon, LinkIcon } from '../miniComponents/ClickableSquare';
 import SiteTitle from '../miniComponents/SiteTitle';
-import { useNumCartProducts } from '../hooks/useCartData';
+import { useCart } from '../hooks/useCart';
 
 const HeaderElem = styled.header`
   border-bottom: 1px solid black;
@@ -36,7 +36,7 @@ const NumProducts = styled.span`
 `;
 
 function Header({ menuButton }) {
-  const { numCartProducts } = useNumCartProducts();
+  const { numProducts } = useCart();
 
   return (
     <HeaderElem>
@@ -44,7 +44,7 @@ function Header({ menuButton }) {
         <ButtonIcon onClick={menuButton} symbolText="menu" />
         <SiteTitle />
         <LinkRight symbolText="shopping_cart" to="/cart">
-          {numCartProducts > 0 && <NumProducts>{numCartProducts}</NumProducts>}
+          {numProducts > 0 && <NumProducts>{numProducts}</NumProducts>}
         </LinkRight>
       </HeaderDiv>
     </HeaderElem>

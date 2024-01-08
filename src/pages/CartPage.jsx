@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useCartProducts, useNumCartProducts } from '../hooks/useCartData';
+import { useCart, useCartDispatch } from '../hooks/useCart';
 import { useProductsByIds } from '../hooks/useProductsAPI';
 import CartItemCard from '../components/CartItemCard';
 
@@ -41,10 +41,9 @@ const Button = styled.button`
 `;
 
 export default function CartPage() {
-  const { numCartProducts } = useNumCartProducts();
-  const { cartItemIds, cartItemCounts, addItem, removeItem, setItemCount } =
-    useCartProducts();
-  const { loading, error, products } = useProductsByIds(cartItemIds);
+  const { numProducts, ids: cartIds, counts: cartCounts } = useCart();
+  const { loading, error, products } = useProductsByIds(cartIds);
+  const { add, remove, setCount } = useCartDispatch();
 
   if (loading) return '...';
   if (error) return `Error: ${error}`;
@@ -52,7 +51,7 @@ export default function CartPage() {
   const totalPrice =
     Math.round(
       products.reduce(
-        (sum, currProd, ind) => sum + currProd.price * cartItemCounts[ind],
+        (sum, currProd, ind) => sum + currProd.price * cartCounts[ind],
         0,
       ) * 100,
     ) / 100;
@@ -62,7 +61,7 @@ export default function CartPage() {
       <CheckoutBox>
         <span>{`Subtotal: $${totalPrice}`}</span>
         <Button>
-          {`Checkout ${numCartProducts} item${numCartProducts > 1 && 's'}`}
+          {`Checkout ${numProducts} item${numProducts > 1 && 's'}`}
         </Button>
       </CheckoutBox>
       <ListBox aria-label="Items in cart">
@@ -72,10 +71,10 @@ export default function CartPage() {
               title={prod.title}
               price={prod.price}
               imageSrc={prod.image}
-              count={cartItemCounts[ind]}
-              increaseCount={() => addItem(prod.id)}
-              decreaseCount={() => removeItem(prod.id)}
-              setCount={(count) => setItemCount(prod.id, count)}
+              count={cartCounts[ind]}
+              increaseCount={() => add(prod.id)}
+              decreaseCount={() => remove(prod.id)}
+              setCount={(count) => setCount(prod.id, count)}
             />
           </ListItem>
         ))}
