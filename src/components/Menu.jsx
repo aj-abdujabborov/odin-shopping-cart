@@ -123,6 +123,17 @@ const Menu = forwardRef(function Menu({ menuButton }, ref) {
         menuButton();
         setClosing(false);
       }}
+      onClick={(e) => {
+        const dialogDimensions = ref.current.getBoundingClientRect();
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          setClosing(true);
+        }
+      }}
     >
       <MenuSubBox>
         <ButtonIcon onClick={() => setClosing(true)} symbolText="menu" />
