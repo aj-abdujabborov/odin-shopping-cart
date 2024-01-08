@@ -1,50 +1,78 @@
 import styled, { keyframes, css } from 'styled-components';
+import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonIcon } from '../miniComponents/ClickableSquare';
+
+const animationDuration = '300ms';
 
 const slideIn = keyframes`
   0% {
     transform: translateX(-100%);
   }
-  100% {
-    transform: translateX(0);
-  }
 `;
 
 const slideOut = keyframes`
-  0% {
-    visibility: visible;
-    transform: translateX(0);
-  }
   100% {
     transform: translateX(-100%);
   }
 `;
 
+const activateBlur = keyframes`
+  0% {
+    opacity: 0;
+  }
+`;
+
+const deactivateBlur = keyframes`
+  0% {
+    opacity: 1;
+  }
+`;
+
 const open = css`
-  animation: ${slideIn} 300ms ease-in-out;
+  animation: ${slideIn} ${animationDuration} ease-in-out;
   visibility: visible;
 `;
 const close = css`
-  animation: ${slideOut} 300ms ease-in-out;
+  animation: ${slideOut} ${animationDuration} ease-in-out;
+`;
+const blur = css`
+  animation: ${activateBlur} ${animationDuration} ease-in-out;
+  opacity: 1;
+`;
+const unblur = css`
+  animation: ${deactivateBlur} ${animationDuration} ease-in-out;
 `;
 
-const MenuBox = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
+const MenuBox = styled.dialog`
+  max-width: 100%;
   width: 70%;
+  max-height: 100%;
+  height: 100%;
+
+  margin-left: 0;
+  padding: 0;
+
+  box-shadow: none;
   background: aliceblue;
-  z-index: 3;
-  visibility: hidden;
-  ${({ $show }) => {
-    if ($show === true) return open;
-    if ($show === false) return close;
-    return null;
-    // on page load, $show will be 0,
-    // and we want no animations to prevent slide-in-animation
-  }};
+  border: none;
+  outline: none;
+
+  &[open] {
+    ${({ $closing }) => ($closing ? '' : open)};
+  }
+  ${({ $closing }) => ($closing ? close : '')};
+
+  &::backdrop {
+    opacity: 0;
+    backdrop-filter: blur(5px) grayscale(80%);
+    -webkit-backdrop-filter: blur(5px) grayscale(80%);
+    ${({ $closing }) => ($closing ? unblur : '')};
+  }
+
+  &[open]::backdrop {
+    ${({ $closing }) => ($closing ? '' : blur)};
+  }
 `;
 
 const MenuSubBox = styled.div`
@@ -82,11 +110,22 @@ const linkMap = [
   { text: 'Shop all', to: '/shop' },
 ];
 
-function Menu({ show, menuButton }) {
+// eslint-disable-next-line prefer-arrow-callback
+const Menu = forwardRef(function Menu({ menuButton }, ref) {
+  const [closing, setClosing] = useState(false);
+
   return (
-    <MenuBox $show={show}>
+    <MenuBox
+      ref={ref}
+      $closing={closing}
+      onAnimationEnd={() => {
+        if (!closing) return;
+        menuButton();
+        setClosing(false);
+      }}
+    >
       <MenuSubBox>
-        <ButtonIcon onClick={menuButton} symbolText="menu" />
+        <ButtonIcon onClick={() => setClosing(true)} symbolText="menu" />
         <Nav>
           <LinksBox>
             {linkMap.map((link, ind) => (
@@ -100,6 +139,6 @@ function Menu({ show, menuButton }) {
       </MenuSubBox>
     </MenuBox>
   );
-}
+});
 
 export default Menu;

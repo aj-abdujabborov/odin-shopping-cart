@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import styled, { createGlobalStyle } from 'styled-components';
 
-import { useState } from 'react';
+import { useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import CartProvider from '../CartContext';
@@ -24,29 +24,25 @@ const GlobalFonts = createGlobalStyle`
   }
 `;
 
-const AppDiv = styled.div`
-  filter: ${(props) => (props.$blur ? `blur(5px) grayscale(80%)` : '')};
-  pointer-events: ${(props) => (props.$blur ? `none` : 'auto')};
-  transition: 300ms ease-in-out filter;
-`;
-
 function App() {
-  const [showMenu, setShowMenu] = useState(0);
+  const menuRef = useRef(null);
 
-  function toggleMenu() {
-    setShowMenu(!showMenu);
+  function showMenu() {
+    menuRef.current.showModal();
+  }
+
+  function closeMenu() {
+    menuRef.current.close();
   }
 
   return (
     <CartProvider>
       <GlobalFonts />
-      <Menu show={showMenu} menuButton={toggleMenu} />
-      <AppDiv $blur={showMenu}>
-        <Header menuButton={toggleMenu} />
-        <main style={{ padding: '20px' }}>
-          <Outlet />
-        </main>
-      </AppDiv>
+      <Menu ref={menuRef} menuButton={closeMenu} />
+      <Header menuButton={showMenu} />
+      <main style={{ padding: '20px' }}>
+        <Outlet />
+      </main>
     </CartProvider>
   );
 }
